@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "SnapFix",
+  "version": "1.0.0",
+  "description": "Capture and report website bugs with SnapFix",
+  "action": {
+    "default_title": "SnapFix",
+    "default_popup": "popup.html"
+  },
+  "permissions": ["activeTab", "tabs", "storage"],
+  "host_permissions": [
+    "https://aejdiieyyvqwsyjyjklv.supabase.co/*"
+  ]
+}

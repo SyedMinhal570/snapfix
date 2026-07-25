@@ -1,0 +1,110 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 400px;
+  margin: 0;
+  padding: 12px;
+  font: 13px/1.4 system-ui, sans-serif;
+  color: #171717;
+  background: #fff;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.muted {
+  color: #71717a;
+  margin: 0 0 10px;
+}
+
+.error {
+  color: #dc2626;
+  margin: 8px 0 0;
+  min-height: 1.2em;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+input {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  padding: 6px 8px;
+  border: 1px solid #d4d4d8;
+  border-radius: 4px;
+  font: inherit;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border-radius: 4px;
+  border: 1px solid #d4d4d8;
+  background: #fafafa;
+  padding: 6px 10px;
+}
+
+button[type="submit"],
+#capture-btn,
+#submit-btn {
+  width: 100%;
+  background: #171717;
+  color: #fff;
+  border-color: #171717;
+  margin-top: 4px;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button.link {
+  border: none;
+  background: none;
+  padding: 0;
+  color: #52525b;
+  text-decoration: underline;
+}
+
+.toolbar {
+  display: flex;
+  gap: 6px;
+  margin: 10px 0 8px;
+}
+
+.toolbar button.active {
+  background: #171717;
+  color: #fff;
+  border-color: #171717;
+}
+
+#canvas {
+  display: block;
+  width: 100%;
+  max-width: 376px;
+  height: auto;
+  border: 1px solid #e4e4e7;
+  border-radius: 4px;
+  touch-action: none;
+  cursor: crosshair;
+  background: #f4f4f5;
+}
+
+#annotate-area {
+  margin-top: 10px;
+}

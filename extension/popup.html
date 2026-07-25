@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SnapFix</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="header">
+      <strong>SnapFix</strong>
+      <button id="logout-btn" type="button" class="link hidden">Log out</button>
+    </header>
+
+    <!-- Login -->
+    <section id="login-view">
+      <p class="muted">Sign in to report bugs</p>
+      <form id="login-form">
+        <label>
+          Email
+          <input id="email" type="email" required autocomplete="username" />
+        </label>
+        <label>
+          Password
+          <input
+            id="password"
+            type="password"
+            required
+            autocomplete="current-password"
+          />
+        </label>
+        <button type="submit">Sign in</button>
+        <p id="login-error" class="error" role="alert"></p>
+      </form>
+    </section>
+
+    <!-- Capture + annotate -->
+    <section id="capture-view" class="hidden">
+      <button id="capture-btn" type="button">Capture this page</button>
+
+      <div id="annotate-area" class="hidden">
+        <div class="toolbar">
+          <button id="pen-btn" type="button" class="active">Pen</button>
+          <button id="undo-btn" type="button">Undo</button>
+          <button id="clear-btn" type="button">Clear</button>
+        </div>
+        <canvas id="canvas"></canvas>
+
+        <label>
+          Title
+          <input id="title" type="text" required placeholder="Brief summary" />
+        </label>
+
+        <button id="submit-btn" type="button">Submit</button>
+        <p id="capture-status" class="muted" role="status"></p>
+      </div>
+    </section>
+
+    <script src="lib/supabase.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>
