@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import ThemeToggle from "@/components/theme-toggle";
 
 export default function Navbar() {
   const router = useRouter();
@@ -15,21 +16,24 @@ export default function Navbar() {
   }
 
   return (
-    <header className="border-b border-zinc-200 bg-white">
+    <header className="border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
         <Link
           href="/dashboard"
-          className="text-sm font-semibold tracking-tight text-zinc-900"
+          className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100"
         >
           SnapFix
         </Link>
-        <button
-          type="button"
-          onClick={handleLogout}
-          className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm text-zinc-700 hover:bg-zinc-50"
-        >
-          Log out
-        </button>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+          >
+            Log out
+          </button>
+        </div>
       </div>
     </header>
   );

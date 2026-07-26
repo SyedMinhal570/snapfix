@@ -54,3 +54,8 @@ create policy "Anyone can view screenshots"
 
 -- Enable Realtime for the issues table
 alter publication supabase_realtime add table public.issues;
+
+-- Severity column (run this if the table already exists)
+alter table public.issues
+  add column if not exists severity text not null default 'medium'
+  check (severity in ('low', 'medium', 'high', 'critical'));

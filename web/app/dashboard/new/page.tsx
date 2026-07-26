@@ -5,6 +5,7 @@ import { FormEvent, useRef, useState } from "react";
 import AnnotationCanvas, {
   type AnnotationCanvasHandle,
 } from "@/components/annotation-canvas";
+import { detectSeverity } from "@/lib/severity";
 import { createClient } from "@/lib/supabase/client";
 
 export default function NewIssuePage() {
@@ -80,12 +81,15 @@ export default function NewIssuePage() {
       data: { publicUrl: annotatedUrl },
     } = supabase.storage.from("screenshots").getPublicUrl(annotatedPath);
 
+    const severity = detectSeverity(title, description);
+
     const { error: insertError } = await supabase.from("issues").insert({
       title,
       description,
       page_url: pageUrl,
       screenshot_url: screenshotUrl,
       annotated_url: annotatedUrl,
+      severity,
       created_by: user.id,
     });
 
@@ -102,10 +106,10 @@ export default function NewIssuePage() {
 
   return (
     <main>
-      <h1 className="mb-1 text-2xl font-semibold tracking-tight text-zinc-900">
+      <h1 className="mb-1 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
         New issue
       </h1>
-      <p className="mb-8 text-sm text-zinc-500">
+      <p className="mb-8 text-sm text-zinc-500 dark:text-zinc-400">
         Report a bug or leave feedback
       </p>
 
@@ -113,7 +117,7 @@ export default function NewIssuePage() {
         <div>
           <label
             htmlFor="title"
-            className="mb-1.5 block text-sm font-medium text-zinc-700"
+            className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
           >
             Title
           </label>
@@ -123,14 +127,14 @@ export default function NewIssuePage() {
             required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-500"
+            className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
           />
         </div>
 
         <div>
           <label
             htmlFor="description"
-            className="mb-1.5 block text-sm font-medium text-zinc-700"
+            className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
           >
             Description
           </label>
@@ -140,14 +144,14 @@ export default function NewIssuePage() {
             rows={4}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-500"
+            className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
           />
         </div>
 
         <div>
           <label
             htmlFor="page_url"
-            className="mb-1.5 block text-sm font-medium text-zinc-700"
+            className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
           >
             Page URL
           </label>
@@ -158,14 +162,14 @@ export default function NewIssuePage() {
             placeholder="https://example.com/page"
             value={pageUrl}
             onChange={(e) => setPageUrl(e.target.value)}
-            className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-500"
+            className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
           />
         </div>
 
         <div>
           <label
             htmlFor="screenshot"
-            className="mb-1.5 block text-sm font-medium text-zinc-700"
+            className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
           >
             Screenshot
           </label>
@@ -175,7 +179,7 @@ export default function NewIssuePage() {
             accept="image/*"
             required
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-            className="block w-full text-sm text-zinc-600 file:mr-3 file:rounded-md file:border-0 file:bg-zinc-100 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-zinc-700 hover:file:bg-zinc-200"
+            className="block w-full text-sm text-zinc-600 file:mr-3 file:rounded-md file:border-0 file:bg-zinc-100 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-zinc-700 hover:file:bg-zinc-200 dark:text-zinc-400 dark:file:bg-zinc-800 dark:file:text-zinc-300 dark:hover:file:bg-zinc-700"
           />
         </div>
 
@@ -191,14 +195,14 @@ export default function NewIssuePage() {
           <button
             type="submit"
             disabled={loading}
-            className="rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 disabled:opacity-50"
+            className="rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
           >
             {loading ? "Submitting…" : "Submit issue"}
           </button>
           <button
             type="button"
             onClick={() => router.push("/dashboard")}
-            className="rounded-md border border-zinc-300 px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-50"
+            className="rounded-md border border-zinc-300 px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
           >
             Cancel
           </button>
