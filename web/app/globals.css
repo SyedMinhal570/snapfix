@@ -26,3 +26,649 @@ body {
 .toast-enter {
   animation: toast-in 0.25s ease-out;
 }
+
+/* ─── Markly landing ─────────────────────────────────────────────────────── */
+.markly-landing {
+  --markly-accent: #0f766e;
+  --markly-accent-hot: #0d5f58;
+  --markly-bg: #f3f6f8;
+  --markly-soft: #e8eef2;
+  --markly-panel: #ffffff;
+  --markly-ink: #0f172a;
+  --markly-muted: #64748b;
+  --markly-line: #d5dee7;
+  --font-display: var(--font-markly-display), Georgia, serif;
+  --font-body: var(--font-markly-body), system-ui, sans-serif;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--markly-bg);
+  color: var(--markly-ink);
+}
+
+.dark .markly-landing {
+  --markly-accent: #2dd4bf;
+  --markly-accent-hot: #5eead4;
+  --markly-bg: #0b1220;
+  --markly-soft: #111827;
+  --markly-panel: #0f172a;
+  --markly-ink: #e2e8f0;
+  --markly-muted: #94a3b8;
+  --markly-line: #1e293b;
+}
+
+.markly-nav {
+  position: relative;
+  z-index: 20;
+  border-bottom: 1px solid var(--markly-line);
+  background: color-mix(in srgb, var(--markly-bg) 82%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.markly-nav-inner {
+  margin: 0 auto;
+  display: flex;
+  height: 4rem;
+  max-width: 72rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .markly-nav-inner {
+    padding: 0 1.5rem;
+  }
+}
+
+.markly-wordmark {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--markly-ink);
+  text-decoration: none;
+}
+
+.markly-wordmark-sm {
+  font-size: 1.25rem;
+}
+
+.markly-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.markly-btn-primary,
+.markly-btn-ghost,
+.markly-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.markly-btn-primary {
+  background: var(--markly-accent);
+  color: #fff;
+}
+
+.dark .markly-btn-primary {
+  color: #0b1220;
+}
+
+.markly-btn-primary:hover {
+  background: var(--markly-accent-hot);
+}
+
+.markly-btn-ghost {
+  font-weight: 500;
+  color: var(--markly-ink);
+}
+
+.markly-btn-ghost:hover {
+  background: var(--markly-soft);
+}
+
+.markly-btn-outline {
+  border: 1px solid var(--markly-line);
+  font-weight: 600;
+  color: var(--markly-ink);
+}
+
+.markly-btn-outline:hover {
+  background: var(--markly-soft);
+}
+
+.markly-btn-lg {
+  padding: 0.625rem 1.25rem;
+}
+
+.markly-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.markly-hero-bg {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      900px 420px at 8% -8%,
+      color-mix(in srgb, var(--markly-accent) 18%, transparent),
+      transparent 58%
+    ),
+    radial-gradient(
+      640px 360px at 92% 8%,
+      color-mix(in srgb, #0369a1 12%, transparent),
+      transparent 52%
+    ),
+    linear-gradient(
+      180deg,
+      var(--markly-soft) 0%,
+      var(--markly-bg) 50%,
+      var(--markly-bg) 100%
+    );
+}
+
+.markly-hero-inner {
+  position: relative;
+  margin: 0 auto;
+  display: grid;
+  max-width: 72rem;
+  gap: 2.5rem;
+  padding: 2.5rem 1rem 4rem;
+}
+
+@media (min-width: 640px) {
+  .markly-hero-inner {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .markly-hero-inner {
+    grid-template-columns: 1.05fr 0.95fr;
+    align-items: center;
+    gap: 3rem;
+    padding-top: 4rem;
+    padding-bottom: 6rem;
+  }
+}
+
+.markly-brand {
+  margin: 0 0 1rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 5vw, 3.75rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--markly-ink);
+}
+
+.markly-headline {
+  margin: 0;
+  max-width: 36rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--markly-ink);
+}
+
+.markly-subhead {
+  margin: 1rem 0 0;
+  max-width: 28rem;
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--markly-muted);
+}
+
+.markly-cta-row {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.markly-section {
+  border-top: 1px solid var(--markly-line);
+  background: var(--markly-bg);
+  padding: 4rem 0;
+}
+
+.markly-section-alt {
+  background: var(--markly-soft);
+}
+
+.markly-section-inner {
+  margin: 0 auto;
+  max-width: 72rem;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .markly-section {
+    padding: 5rem 0;
+  }
+  .markly-section-inner {
+    padding: 0 1.5rem;
+  }
+}
+
+.markly-h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--markly-ink);
+}
+
+.markly-h3 {
+  margin: 0.25rem 0 0;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--markly-ink);
+}
+
+.markly-lede {
+  margin: 0.5rem 0 0;
+  max-width: 36rem;
+  font-family: var(--font-body);
+  color: var(--markly-muted);
+}
+
+.markly-copy {
+  margin: 0.5rem 0 0;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--markly-muted);
+}
+
+.markly-steps {
+  margin: 3rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 2.5rem;
+}
+
+@media (min-width: 640px) {
+  .markly-steps {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+}
+
+.markly-step-icon {
+  margin-bottom: 1rem;
+  display: flex;
+  height: 2.75rem;
+  width: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  background: color-mix(in srgb, var(--markly-accent) 15%, transparent);
+  color: var(--markly-accent);
+}
+
+.markly-step-kicker {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--markly-accent);
+}
+
+.markly-why-grid {
+  margin-top: 3rem;
+  display: grid;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .markly-why-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.markly-pricing {
+  margin-top: 3rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .markly-pricing {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+}
+
+.markly-price-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--markly-line);
+  background: var(--markly-panel);
+  padding: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .markly-price-card {
+    padding: 2rem;
+  }
+}
+
+.markly-price-card-featured {
+  position: relative;
+  border: 2px solid var(--markly-accent);
+}
+
+.markly-badge {
+  position: absolute;
+  top: -0.75rem;
+  left: 1.5rem;
+  background: var(--markly-accent);
+  padding: 0.15rem 0.65rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.dark .markly-badge {
+  color: #0b1220;
+}
+
+.markly-price {
+  margin: 0.25rem 0 0;
+  font-family: var(--font-body);
+  font-size: 1.875rem;
+  font-weight: 600;
+  color: var(--markly-ink);
+}
+
+.markly-price span {
+  margin-left: 0.25rem;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--markly-muted);
+}
+
+.markly-price-desc {
+  flex: 1;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+.markly-footer {
+  margin-top: auto;
+  border-top: 1px solid var(--markly-line);
+  background: var(--markly-bg);
+  padding: 2.5rem 0;
+}
+
+.markly-footer-inner {
+  margin: 0 auto;
+  display: flex;
+  max-width: 72rem;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .markly-footer-inner {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+  }
+}
+
+.markly-copyright {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--markly-muted);
+}
+
+/* Annotation mock */
+.markly-mock {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--markly-line);
+  background: var(--markly-panel);
+  box-shadow: 0 24px 60px -28px rgba(15, 23, 42, 0.45);
+}
+
+.markly-mock-chrome {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--markly-line);
+  padding: 0.75rem 1rem;
+}
+
+.markly-dot {
+  height: 0.625rem;
+  width: 0.625rem;
+  border-radius: 9999px;
+}
+
+.markly-dot-r {
+  background: #ff6b5a;
+}
+.markly-dot-y {
+  background: #f5c542;
+}
+.markly-dot-g {
+  background: #3ecf8e;
+}
+
+.markly-mock-url {
+  margin-left: 0.75rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--markly-muted);
+}
+
+.markly-mock-stage {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: linear-gradient(145deg, #1a2332 0%, #243447 45%, #1e2a3a 100%);
+}
+
+.dark .markly-mock-stage {
+  background: linear-gradient(145deg, #0b1220 0%, #152033 50%, #0f172a 100%);
+}
+
+.markly-mock-ui {
+  position: absolute;
+  inset: 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1rem;
+}
+
+.markly-skel {
+  border-radius: 0.25rem;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.markly-skel-title {
+  margin-bottom: 1rem;
+  height: 0.75rem;
+  width: 33%;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.markly-skel-line {
+  margin-bottom: 0.5rem;
+  height: 0.5rem;
+  width: 80%;
+}
+
+.markly-skel-line-short {
+  margin-bottom: 0.5rem;
+  height: 0.5rem;
+  width: 60%;
+}
+
+.markly-mock-grid {
+  margin-top: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.markly-skel-tile {
+  height: 4rem;
+}
+
+.markly-skel-tile-accent {
+  background: color-mix(in srgb, var(--markly-accent) 35%, transparent);
+}
+
+.markly-skel-btn {
+  margin-top: 1rem;
+  height: 2rem;
+  width: 7rem;
+  background: color-mix(in srgb, var(--markly-accent) 80%, transparent);
+}
+
+.markly-stroke {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.markly-rect {
+  position: absolute;
+  left: 58%;
+  top: 42%;
+  height: 22%;
+  width: 28%;
+  border: 2px solid var(--markly-accent);
+}
+
+.markly-chip {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  max-width: 220px;
+  border: 1px solid var(--markly-line);
+  background: var(--markly-panel);
+  padding: 0.5rem 0.75rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--markly-ink);
+  box-shadow: 0 10px 24px -12px rgba(0, 0, 0, 0.35);
+}
+
+.markly-chip-label {
+  display: block;
+  font-weight: 600;
+  color: var(--markly-accent);
+}
+
+.markly-chip-text {
+  display: block;
+  margin-top: 0.15rem;
+  color: var(--markly-muted);
+}
+
+@keyframes markly-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes markly-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes markly-rect-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes markly-chip-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.markly-fade-up {
+  animation: markly-fade-up 0.7s ease-out both;
+}
+
+.markly-fade-up-delay {
+  animation-delay: 0.15s;
+}
+
+.markly-stroke path {
+  animation: markly-draw 1.1s ease-out 0.45s forwards;
+}
+
+.markly-rect {
+  animation: markly-rect-in 0.45s ease-out 0.9s both;
+}
+
+.markly-chip {
+  animation: markly-chip-in 0.5s ease-out 1.15s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .markly-fade-up,
+  .markly-fade-up-delay,
+  .markly-stroke path,
+  .markly-rect,
+  .markly-chip {
+    animation: none;
+  }
+
+  .markly-stroke path {
+    stroke-dashoffset: 0;
+  }
+}
