@@ -2,6 +2,8 @@
 
 export type ToastItem = {
   id: string;
+  /** Bold lead-in, e.g. "New issue reported:" */
+  label?: string;
   title: string;
 };
 
@@ -25,7 +27,11 @@ export default function ToastStack({ toasts, onDismiss }: Props) {
           role="status"
         >
           <p className="min-w-0 flex-1 text-sm text-zinc-800 dark:text-zinc-200">
-            <span className="font-medium">New issue reported:</span>{" "}
+            {toast.label ? (
+              <>
+                <span className="font-medium">{toast.label}</span>{" "}
+              </>
+            ) : null}
             <span className="text-zinc-600 dark:text-zinc-400">
               {toast.title}
             </span>

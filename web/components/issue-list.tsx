@@ -79,7 +79,10 @@ export default function IssueList({
 
   function pushToast(title: string) {
     const id = crypto.randomUUID();
-    setToasts((prev) => [...prev, { id, title }]);
+    setToasts((prev) => [
+      ...prev,
+      { id, label: "New issue reported:", title },
+    ]);
     const timer = setTimeout(() => dismissToast(id), 4000);
     toastTimers.current.set(id, timer);
   }

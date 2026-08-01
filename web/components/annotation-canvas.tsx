@@ -43,11 +43,14 @@ export type AnnotationCanvasHandle = {
 };
 
 type Props = {
-  file: File;
+  /** Local file (freelancer upload / new issue). */
+  file?: File;
+  /** Remote image URL (public review page). Provide one of file or imageUrl. */
+  imageUrl?: string;
 };
 
 const AnnotationCanvas = forwardRef<AnnotationCanvasHandle, Props>(
-  function AnnotationCanvas({ file }, ref) {
+  function AnnotationCanvas({ file, imageUrl }, ref) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const imageRef = useRef<HTMLImageElement | null>(null);
     const drawingRef = useRef(false);
@@ -113,8 +116,12 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasHandle, Props>(
       setStrokes([]);
       currentRef.current = null;
 
-      const url = URL.createObjectURL(file);
+      if (!file && !imageUrl) return;
+
+      let objectUrl: string | null = null;
       const img = new Image();
+      img.crossOrigin = "anonymous";
+
       img.onload = () => {
         imageRef.current = img;
         const canvas = canvasRef.current;
@@ -122,7 +129,6 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasHandle, Props>(
         canvas.width = img.naturalWidth;
         canvas.height = img.naturalHeight;
         setReady(true);
-        // redraw after state settles via effect below
         requestAnimationFrame(() => {
           const ctx = canvas.getContext("2d");
           if (!ctx) return;
@@ -130,13 +136,24 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasHandle, Props>(
           ctx.drawImage(img, 0, 0);
         });
       };
-      img.src = url;
+
+      img.onerror = () => {
+        console.error("Failed to load image for annotation canvas");
+        setReady(false);
+      };
+
+      if (file) {
+        objectUrl = URL.createObjectURL(file);
+        img.src = objectUrl;
+      } else if (imageUrl) {
+        img.src = imageUrl;
+      }
 
       return () => {
-        URL.revokeObjectURL(url);
+        if (objectUrl) URL.revokeObjectURL(objectUrl);
         imageRef.current = null;
       };
-    }, [file]);
+    }, [file, imageUrl]);
 
     useEffect(() => {
       if (ready) redraw();
