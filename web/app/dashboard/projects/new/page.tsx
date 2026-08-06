@@ -193,12 +193,18 @@ export default function NewProjectPage() {
         </div>
 
         {upgradeMessage && (
-          <p
+          <div
             className="rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-200"
             role="status"
           >
-            {upgradeMessage}
-          </p>
+            <p>{upgradeMessage}</p>
+            <Link
+              href="/upgrade"
+              className="mt-2 inline-block font-semibold underline"
+            >
+              Upgrade to Paid →
+            </Link>
+          </div>
         )}
 
         {error && (

@@ -236,7 +236,7 @@ export default function LandingPage() {
                 Unlimited projects and feedback. Share as many review links as
                 your clients need.
               </p>
-              <Link href="/signup" className="markly-btn-primary markly-btn-lg">
+              <Link href="/upgrade" className="markly-btn-primary markly-btn-lg">
                 Get started
               </Link>
             </div>

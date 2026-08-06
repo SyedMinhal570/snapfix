@@ -42,8 +42,9 @@ export async function proxy(request: NextRequest) {
   const isPublicReview =
     pathname === "/review" || pathname.startsWith("/review/");
   const isLanding = pathname === "/";
+  const isUpgrade = pathname === "/upgrade";
 
-  if (!user && !isAuthPage && !isPublicReview && !isLanding) {
+  if (!user && !isAuthPage && !isPublicReview && !isLanding && !isUpgrade) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);

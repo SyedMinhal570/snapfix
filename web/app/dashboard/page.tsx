@@ -63,9 +63,12 @@ export default async function ProjectsDashboardPage() {
           </p>
         </div>
         {atProjectLimit ? (
-          <span className="rounded-md border border-amber-300 bg-amber-50 px-4 py-2 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-200">
+          <Link
+            href="/upgrade"
+            className="rounded-md border border-amber-300 bg-amber-50 px-4 py-2 text-sm text-amber-800 hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-200 dark:hover:bg-amber-900"
+          >
             Upgrade to add more projects
-          </span>
+          </Link>
         ) : (
           <Link
             href="/dashboard/projects/new"
