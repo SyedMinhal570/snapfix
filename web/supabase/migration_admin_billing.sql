@@ -1,5 +1,7 @@
 -- Admin + profiles.email for Markly manual billing
 -- Run in Supabase SQL Editor. Set admin_email to the SAME value as ADMIN_EMAIL in .env.local
+-- Other .env.local keys used by the web app: NEXT_PUBLIC_SUPABASE_URL,
+-- NEXT_PUBLIC_SUPABASE_ANON_KEY, NEXT_PUBLIC_SENTRY_DSN, GROQ_API_KEY
 
 create table if not exists public.app_settings (
   key text primary key,

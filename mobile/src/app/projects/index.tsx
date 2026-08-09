@@ -13,42 +13,38 @@ import { useNavigation, useRouter } from "expo-router";
 
 import { supabase } from "@/lib/supabase";
 
-type Issue = {
+type Project = {
   id: string;
-  title: string;
-  status: string;
+  name: string;
+  client_name: string | null;
   screenshot_url: string;
-  annotated_url: string | null;
   created_at: string;
-};
-
-const statusStyles: Record<string, { bg: string; text: string }> = {
-  open: { bg: "#fffbeb", text: "#b45309" },
-  in_progress: { bg: "#eff6ff", text: "#1d4ed8" },
-  fixed: { bg: "#ecfdf5", text: "#047857" },
-};
-
-const statusLabels: Record<string, string> = {
-  open: "Open",
-  in_progress: "In progress",
-  fixed: "Fixed",
+  feedback: { count: number }[] | null;
 };
 
 function formatDate(iso: string): string {
   return iso.slice(0, 10);
 }
 
-export default function IssuesScreen() {
+export default function ProjectsScreen() {
   const navigation = useNavigation();
   const router = useRouter();
-  const [issues, setIssues] = useState<Issue[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const fetchIssues = useCallback(async () => {
+  const fetchProjects = useCallback(async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
+
     const { data, error } = await supabase
-      .from("issues")
-      .select("id, title, status, screenshot_url, annotated_url, created_at")
+      .from("projects")
+      .select(
+        "id, name, client_name, screenshot_url, created_at, feedback(count)",
+      )
+      .eq("owner_id", user.id)
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -56,14 +52,14 @@ export default function IssuesScreen() {
       return;
     }
 
-    setIssues((data as Issue[]) ?? []);
+    setProjects((data as Project[]) ?? []);
   }, []);
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
-        <Pressable onPress={() => router.replace("/projects")} hitSlop={8}>
-          <Text style={styles.navLink}>Projects</Text>
+        <Pressable onPress={() => router.replace("/")} hitSlop={8}>
+          <Text style={styles.navLink}>Issues</Text>
         </Pressable>
       ),
       headerRight: () => (
@@ -84,7 +80,7 @@ export default function IssuesScreen() {
     let channel: ReturnType<typeof supabase.channel> | null = null;
 
     (async () => {
-      await fetchIssues();
+      await fetchProjects();
       if (cancelled) return;
       setLoading(false);
 
@@ -98,36 +94,19 @@ export default function IssuesScreen() {
       }
 
       channel = supabase
-        .channel("mobile-issues")
+        .channel("mobile-projects")
         .on(
           "postgres_changes",
-          { event: "*", schema: "public", table: "issues" },
-          (payload) => {
-            if (payload.eventType === "INSERT") {
-              const issue = payload.new as Issue;
-              setIssues((prev) => {
-                if (prev.some((i) => i.id === issue.id)) return prev;
-                return [issue, ...prev];
-              });
-              return;
-            }
-
-            if (payload.eventType === "UPDATE") {
-              const updated = payload.new as Issue;
-              setIssues((prev) =>
-                prev.map((issue) =>
-                  issue.id === updated.id
-                    ? {
-                        ...issue,
-                        status: updated.status,
-                        title: updated.title,
-                        screenshot_url: updated.screenshot_url,
-                        annotated_url: updated.annotated_url,
-                      }
-                    : issue,
-                ),
-              );
-            }
+          { event: "*", schema: "public", table: "projects" },
+          () => {
+            void fetchProjects();
+          },
+        )
+        .on(
+          "postgres_changes",
+          { event: "INSERT", schema: "public", table: "feedback" },
+          () => {
+            void fetchProjects();
           },
         )
         .subscribe();
@@ -137,11 +116,11 @@ export default function IssuesScreen() {
       cancelled = true;
       if (channel) void supabase.removeChannel(channel);
     };
-  }, [fetchIssues]);
+  }, [fetchProjects]);
 
   async function onRefresh() {
     setRefreshing(true);
-    await fetchIssues();
+    await fetchProjects();
     setRefreshing(false);
   }
 
@@ -155,38 +134,48 @@ export default function IssuesScreen() {
 
   return (
     <FlatList
-      data={issues}
+      data={projects}
       keyExtractor={(item) => item.id}
       contentContainerStyle={
-        issues.length === 0 ? styles.emptyContainer : styles.list
+        projects.length === 0 ? styles.emptyContainer : styles.list
       }
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
       ListEmptyComponent={
-        <Text style={styles.emptyText}>No issues yet.</Text>
+        <Text style={styles.emptyText}>No projects yet.</Text>
       }
       renderItem={({ item }) => {
-        const badge = statusStyles[item.status] ?? statusStyles.open;
-        const thumb = item.annotated_url || item.screenshot_url;
-
+        const count = item.feedback?.[0]?.count ?? 0;
         return (
-          <View style={styles.card}>
-            <Image source={{ uri: thumb }} style={styles.thumb} contentFit="cover" />
+          <Pressable
+            style={styles.card}
+            onPress={() => router.push(`/projects/${item.id}`)}
+          >
+            <Image
+              source={{ uri: item.screenshot_url }}
+              style={styles.thumb}
+              contentFit="cover"
+            />
             <View style={styles.cardBody}>
               <View style={styles.cardHeader}>
                 <Text style={styles.cardTitle} numberOfLines={2}>
-                  {item.title}
+                  {item.name}
                 </Text>
-                <View style={[styles.badge, { backgroundColor: badge.bg }]}>
-                  <Text style={[styles.badgeText, { color: badge.text }]}>
-                    {statusLabels[item.status] ?? item.status}
+                <View style={[styles.badge, { backgroundColor: "#eff6ff" }]}>
+                  <Text style={[styles.badgeText, { color: "#1d4ed8" }]}>
+                    {count} feedback
                   </Text>
                 </View>
               </View>
+              {item.client_name ? (
+                <Text style={styles.client} numberOfLines={1}>
+                  {item.client_name}
+                </Text>
+              ) : null}
               <Text style={styles.date}>{formatDate(item.created_at)}</Text>
             </View>
-          </View>
+          </Pressable>
         );
       }}
     />
@@ -263,6 +252,11 @@ const styles = StyleSheet.create({
   badgeText: {
     fontSize: 11,
     fontWeight: "600",
+  },
+  client: {
+    fontSize: 13,
+    color: "#52525b",
+    marginBottom: 4,
   },
   date: {
     fontSize: 12,

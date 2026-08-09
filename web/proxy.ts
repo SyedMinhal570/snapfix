@@ -43,8 +43,19 @@ export async function proxy(request: NextRequest) {
     pathname === "/review" || pathname.startsWith("/review/");
   const isLanding = pathname === "/";
   const isUpgrade = pathname === "/upgrade";
+  const isApiDocs =
+    pathname === "/api-docs" || pathname.startsWith("/api-docs/");
+  const isApiRoute = pathname.startsWith("/api/");
 
-  if (!user && !isAuthPage && !isPublicReview && !isLanding && !isUpgrade) {
+  if (
+    !user &&
+    !isAuthPage &&
+    !isPublicReview &&
+    !isLanding &&
+    !isUpgrade &&
+    !isApiDocs &&
+    !isApiRoute
+  ) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);

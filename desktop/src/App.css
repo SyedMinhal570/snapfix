@@ -129,6 +129,63 @@ button:hover:not(:disabled) {
   gap: 0.5rem;
 }
 
+.view-nav {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.nav-link {
+  background: transparent;
+  color: #71717a;
+  border: 1px solid transparent;
+  padding: 0.35rem 0.65rem;
+  font-weight: 500;
+}
+
+.nav-link.active {
+  color: #171717;
+  border-color: #e4e4e7;
+  background: #fff;
+}
+
+.card-button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0;
+  border: 1px solid #e4e4e7;
+  border-radius: 8px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.card-button:hover:not(:disabled) {
+  opacity: 1;
+  border-color: #a1a1aa;
+}
+
+.client-name {
+  margin: 0 0 0.35rem;
+  font-size: 0.8rem;
+  color: #52525b;
+}
+
+.feedback-comment {
+  margin: 0.4rem 0 0;
+  font-size: 0.85rem;
+  color: #171717;
+  line-height: 1.4;
+}
+
+.thumb-contain {
+  object-fit: contain;
+}
+
 .grid {
   list-style: none;
   margin: 0;
