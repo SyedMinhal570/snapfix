@@ -135,6 +135,19 @@ export default function PublicReviewPage() {
       return;
     }
 
+    // Notify the project owner by email; never block or surface failures.
+    const submittedComment = comment.trim();
+    void fetch("/api/notify-feedback", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        projectId: project.id,
+        commentText: submittedComment,
+      }),
+    }).catch(() => {
+      /* email is best-effort — feedback already saved */
+    });
+
     setDone(true);
   }
 

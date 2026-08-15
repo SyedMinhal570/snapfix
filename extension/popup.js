@@ -26,6 +26,10 @@ const undoBtn = document.getElementById("undo-btn");
 const clearBtn = document.getElementById("clear-btn");
 const titleInput = document.getElementById("title");
 const submitBtn = document.getElementById("submit-btn");
+const submitFeedbackBtn = document.getElementById("submit-feedback-btn");
+const projectPicker = document.getElementById("project-picker");
+const projectSelect = document.getElementById("project-select");
+const projectPickerHint = document.getElementById("project-picker-hint");
 const captureStatus = document.getElementById("capture-status");
 
 const ctx = canvas.getContext("2d");
@@ -47,6 +51,72 @@ function showCapture() {
   loginView.classList.add("hidden");
   captureView.classList.remove("hidden");
   logoutBtn.classList.remove("hidden");
+  void loadProjects();
+}
+
+function applySubmitMode() {
+  const mode = document.querySelector(
+    'input[name="submit-mode"]:checked',
+  )?.value;
+
+  if (mode === "feedback") {
+    projectPicker.classList.remove("hidden");
+    submitBtn.classList.add("hidden");
+    submitFeedbackBtn.classList.remove("hidden");
+  } else {
+    projectPicker.classList.add("hidden");
+    submitBtn.classList.remove("hidden");
+    submitFeedbackBtn.classList.add("hidden");
+  }
+}
+
+async function loadProjects() {
+  const previous = projectSelect.value;
+  projectSelect.innerHTML = `<option value="">Select a project…</option>`;
+  projectPickerHint.classList.add("hidden");
+  submitFeedbackBtn.disabled = false;
+
+  const {
+    data: { user },
+  } = await sb.auth.getUser();
+  if (!user) return;
+
+  const { data, error } = await sb
+    .from("projects")
+    .select("id, name, client_name")
+    .eq("owner_id", user.id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    projectPickerHint.textContent =
+      error.message || "Could not load projects.";
+    projectPickerHint.classList.remove("hidden");
+    submitFeedbackBtn.disabled = true;
+    return;
+  }
+
+  const projects = data ?? [];
+  if (!projects.length) {
+    projectPickerHint.textContent =
+      "No projects yet. Create one in the Markly dashboard.";
+    projectPickerHint.classList.remove("hidden");
+    submitFeedbackBtn.disabled = true;
+    return;
+  }
+
+  for (const project of projects) {
+    const option = document.createElement("option");
+    option.value = project.id;
+    const client = project.client_name?.trim();
+    option.textContent = client
+      ? `${project.name} (${client})`
+      : project.name;
+    projectSelect.append(option);
+  }
+
+  if (previous && [...projectSelect.options].some((o) => o.value === previous)) {
+    projectSelect.value = previous;
+  }
 }
 
 async function saveSession(session) {
@@ -337,4 +407,79 @@ submitBtn.addEventListener("click", async () => {
   }
 });
 
+document.querySelectorAll('input[name="submit-mode"]').forEach((input) => {
+  input.addEventListener("change", applySubmitMode);
+});
+
+submitFeedbackBtn.addEventListener("click", async () => {
+  const projectId = projectSelect.value.trim();
+  if (!projectId) {
+    captureStatus.textContent = "Please select a project.";
+    return;
+  }
+  if (!originalDataUrl || !image) {
+    captureStatus.textContent = "Capture a page first.";
+    return;
+  }
+
+  submitFeedbackBtn.disabled = true;
+  captureBtn.disabled = true;
+  captureStatus.textContent = "Submitting feedback…";
+
+  try {
+    const {
+      data: { user },
+      error: userError,
+    } = await sb.auth.getUser();
+
+    if (userError || !user) {
+      throw new Error("Session expired. Please log in again.");
+    }
+
+    const annotatedBlob = await canvasToPngBlob();
+    if (!annotatedBlob) {
+      throw new Error("Could not export annotated image.");
+    }
+
+    const path = `feedback/${projectId}/${crypto.randomUUID()}.png`;
+    const { error: uploadError } = await sb.storage
+      .from("screenshots")
+      .upload(path, annotatedBlob, { contentType: "image/png" });
+    if (uploadError) throw uploadError;
+
+    const {
+      data: { publicUrl },
+    } = sb.storage.from("screenshots").getPublicUrl(path);
+
+    const { data, error } = await sb.rpc("submit_feedback", {
+      p_project_id: projectId,
+      p_annotated_image_url: publicUrl,
+      p_comment_text: titleInput.value.trim(),
+    });
+    if (error) throw error;
+
+    const result = data;
+    if (!result?.ok) {
+      if (result?.error === "upgrade_required") {
+        throw new Error(
+          result.message ??
+            "This project has reached the free plan feedback limit.",
+        );
+      }
+      throw new Error(result?.message ?? "Could not submit feedback.");
+    }
+
+    captureStatus.textContent = "Feedback submitted!";
+    setTimeout(() => {
+      resetCapture();
+      window.close();
+    }, 900);
+  } catch (err) {
+    captureStatus.textContent = err.message || "Submit failed.";
+    submitFeedbackBtn.disabled = false;
+    captureBtn.disabled = false;
+  }
+});
+
+applySubmitMode();
 restoreAuth();

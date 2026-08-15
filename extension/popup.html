@@ -51,7 +51,39 @@
           <input id="title" type="text" required placeholder="Brief summary" />
         </label>
 
-        <button id="submit-btn" type="button">Submit</button>
+        <fieldset class="submit-mode">
+          <legend>Submit as</legend>
+          <label class="radio">
+            <input
+              type="radio"
+              name="submit-mode"
+              value="issue"
+              checked
+            />
+            Submit as Issue
+          </label>
+          <label class="radio">
+            <input type="radio" name="submit-mode" value="feedback" />
+            Send as Project Feedback
+          </label>
+        </fieldset>
+
+        <div id="project-picker" class="hidden">
+          <label>
+            Project
+            <select id="project-select">
+              <option value="">Select a project…</option>
+            </select>
+          </label>
+          <p id="project-picker-hint" class="muted hidden">
+            No projects yet. Create one in the Markly dashboard.
+          </p>
+        </div>
+
+        <button id="submit-btn" type="button">Submit as Issue</button>
+        <button id="submit-feedback-btn" type="button" class="hidden">
+          Send as Project Feedback
+        </button>
         <p id="capture-status" class="muted" role="status"></p>
       </div>
     </section>

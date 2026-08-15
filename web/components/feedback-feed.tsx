@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import FeedbackSummary from "@/components/feedback-summary";
 import ToastStack, { type ToastItem } from "@/components/toast";
+import { createClient } from "@/lib/supabase/client";
 
 export type FeedbackItem = {
   id: string;
@@ -85,6 +86,11 @@ export default function FeedbackFeed({
       <ToastStack
         toasts={toasts}
         onDismiss={(id) => setToasts((prev) => prev.filter((t) => t.id !== id))}
+      />
+
+      <FeedbackSummary
+        projectId={projectId}
+        hasFeedback={items.length > 0}
       />
 
       {!items.length ? (

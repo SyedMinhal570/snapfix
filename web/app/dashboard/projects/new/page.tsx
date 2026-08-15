@@ -9,6 +9,17 @@ import {
   isFreePlan,
 } from "@/lib/plans";
 
+const UPGRADE_PROJECTS_MESSAGE =
+  "Free plan includes 1 project. Upgrade to Paid to create more.";
+
+function isProjectLimitError(message: string | undefined): boolean {
+  const m = (message ?? "").toLowerCase();
+  return (
+    m.includes("free plan allows 1 project") ||
+    m.includes("upgrade to add more")
+  );
+}
+
 export default function NewProjectPage() {
   const router = useRouter();
   const [name, setName] = useState("");
@@ -62,9 +73,7 @@ export default function NewProjectPage() {
 
       if ((count ?? 0) >= FREE_MAX_PROJECTS) {
         setLoading(false);
-        setUpgradeMessage(
-          "Free plan includes 1 project. Upgrade to Paid to create more.",
-        );
+        setUpgradeMessage(UPGRADE_PROJECTS_MESSAGE);
         return;
       }
     }
@@ -105,6 +114,10 @@ export default function NewProjectPage() {
     setLoading(false);
 
     if (insertError || !project) {
+      if (isProjectLimitError(insertError?.message)) {
+        setUpgradeMessage(UPGRADE_PROJECTS_MESSAGE);
+        return;
+      }
       setError(insertError?.message ?? "Could not create project.");
       return;
     }

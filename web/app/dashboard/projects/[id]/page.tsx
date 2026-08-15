@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import FeedbackFeed, {
   type FeedbackItem,
 } from "@/components/feedback-feed";
-import FeedbackSummary from "@/components/feedback-summary";
 import ShareLinkCopy from "@/components/share-link-copy";
 import { createClient } from "@/lib/supabase/server";
 import { FREE_MAX_FEEDBACK_PER_PROJECT, isFreePlan } from "@/lib/plans";
@@ -98,10 +97,6 @@ export default async function ProjectDetailPage({ params }: Props) {
       <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-100">
         Client feedback
       </h2>
-      <FeedbackSummary
-        projectId={project.id}
-        hasFeedback={count > 0}
-      />
       <FeedbackFeed
         projectId={project.id}
         initialFeedback={(feedback as FeedbackItem[]) ?? []}
