@@ -16,7 +16,12 @@ type ProjectRow = {
   feedback: { count: number }[];
 };
 
-export default async function ProjectsDashboardPage() {
+type Props = {
+  searchParams: Promise<{ upgrade?: string }>;
+};
+
+export default async function ProjectsDashboardPage({ searchParams }: Props) {
+  const { upgrade } = await searchParams;
   const supabase = await createClient();
 
   const {
@@ -42,6 +47,53 @@ export default async function ProjectsDashboardPage() {
 
   return (
     <main>
+      {upgrade === "success" || (!free && upgrade === "pending") ? (
+        <p
+          className="mb-6 rounded-md border border-emerald-300 bg-emerald-50 px-3 py-2 text-sm text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950 dark:text-emerald-200"
+          role="status"
+        >
+          You&apos;re now on the Paid plan!
+        </p>
+      ) : null}
+      {upgrade === "pending" && free ? (
+        <p
+          className="mb-6 rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-200"
+          role="status"
+        >
+          Payment is processing. Refresh this page in a few seconds — your
+          plan upgrades automatically once Safepay confirms the payment. If
+          it doesn&apos;t, try again from{" "}
+          <Link href="/upgrade" className="font-semibold underline">
+            Upgrade
+          </Link>
+          .
+        </p>
+      ) : null}
+      {upgrade === "cancelled" ? (
+        <p
+          className="mb-6 rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-200"
+          role="status"
+        >
+          Payment was cancelled. Your plan was not changed.{" "}
+          <Link href="/upgrade" className="font-semibold underline">
+            Retry checkout
+          </Link>{" "}
+          or use JazzCash / Easypaisa.
+        </p>
+      ) : null}
+      {upgrade === "error" ? (
+        <p
+          className="mb-6 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800 dark:border-red-800 dark:bg-red-950 dark:text-red-200"
+          role="alert"
+        >
+          We couldn&apos;t confirm that payment. Your plan was not changed.{" "}
+          <Link href="/upgrade" className="font-semibold underline">
+            Try again
+          </Link>
+          .
+        </p>
+      ) : null}
+
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
